@@ -1,1 +1,1 @@
-pip3 install scikit-learn==0.23.2 numpy==1.19.5 pandas==1.1.5
+pip3 install -r requirements.txt

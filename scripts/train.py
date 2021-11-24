@@ -1,5 +1,6 @@
 import scipy
 import pickle
+import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import Lasso, Ridge, ElasticNet
