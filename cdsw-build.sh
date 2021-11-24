@@ -1,1 +1,1 @@
-pip3 install scikit-learn==1.0.1 numpy==1.19.4 pandas==1.3.4
+pip3 install scikit-learn==0.23.2 numpy==1.19.5 pandas==1.1.5
