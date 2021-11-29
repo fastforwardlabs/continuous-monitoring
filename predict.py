@@ -32,12 +32,37 @@ with open('model.pkl', 'rb') as f:
 def predict(data_input):
     
     # Convert dict representation back to dataframe for inference
-    df = pd.DataFrame.from_records([data_input['record']]).drop("price", axis=1)
+    df = pd.DataFrame.from_records([data_input['record']]) #.drop("price", axis=1)
+    
+    col_order = ['id',
+                 'price',
+                 'bedrooms',
+                 'bathrooms',
+                 'sqft_living',
+                 'sqft_lot',
+                 'floors',
+                 'waterfront',
+                 'view',
+                 'condition',
+                 'grade',
+                 'sqft_above',
+                 'sqft_basement',
+                 'yr_built',
+                 'yr_renovated',
+                 'zipcode',
+                 'lat',
+                 'long',
+                 'sqft_living15',
+                 'sqft_lot15',
+                 'date_sold',
+                 'date_listed']
+    
+    df = df[col_order].drop("price", axis=1)
     
     # Log raw input values of features used in inference pipeline
-#     active_features = get_active_feature_names(model.named_steps["preprocess"]) feature not compatible with Python 3.6
-#     active_features = ["bedrooms", "bathrooms", "sqft_living", "sqft_lot", "waterfront", "zipcode", "condition", "view"]
-#     cdsw.track_metric("input_features", df[active_features].to_dict(orient="records")[0])
+    # active_features = get_active_feature_names(model.named_steps["preprocess"]) # feature not compatible with Python 3.6
+    active_features = ["bedrooms", "bathrooms", "sqft_living", "sqft_lot", "waterfront", "zipcode", "condition", "view"]
+    cdsw.track_metric("input_features", df[active_features].to_dict(orient="records")[0])
 
     # Use pipeline to make inference on request
     result = model.predict(df).item()
