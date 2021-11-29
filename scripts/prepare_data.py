@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 
@@ -30,7 +31,9 @@ prod_df = df[
 ].sort_values("date_sold")
 
 # Save off these dataframes
+working_dir = 'data/working'
+os.makedirs(working_dir)
 dfs = [("train", train_df), ("prod", prod_df)]
 for name, dataframe in dfs:
-    path = f"data/working/{name}_df.pkl"
+    path = os.path.join(working_dir, f"{name}_df.pkl")
     dataframe.to_pickle(path)
