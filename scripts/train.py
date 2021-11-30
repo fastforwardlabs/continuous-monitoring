@@ -16,8 +16,8 @@ X_train = train_df.drop("price", axis=1)
 y_train = train_df.price
 
 # define the intended features and type
-num_cols = ["bedrooms", "bathrooms", "sqft_living", "sqft_lot"]
-cat_cols = ["waterfront", "zipcode", "condition", "view"]
+num_cols = ["sqft_living", "sqft_lot"]
+cat_cols = ["bedrooms", "bathrooms","waterfront", "zipcode", "condition", "view"]
 
 # define our numerical and categorical pipelines
 num_pipe = Pipeline(
