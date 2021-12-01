@@ -15,8 +15,8 @@ environment_variables:
       to facilitate project development.
     required: True
 
-feature_dependencies:
-  - model_metrics
+# feature_dependencies:
+#   - model_metrics
 
 runtimes:
   - editor: Workbench
