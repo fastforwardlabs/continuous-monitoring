@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from pandas.tseries.offsets import DateOffset
+from sklearn.preprocessing import FunctionTransformer
 
 def random_day_offset(ts: pd._libs.tslibs.timestamps.Timestamp, max_days=60):
     """
@@ -27,52 +28,60 @@ def get_active_feature_names(
         [column_transformer.named_transformers_[step].feature_names_in_ for step in active_steps]
     ).tolist()
 
-def get_latest_deployment_details(client, model_name):
+def outlier_removal(X, multiple, cols):
     """
-    Given a APIv2 client object and Model Name, use APIv2 to retrieve details about the latest/current deployment.
+    Replaces outliers in each column of a pd.DataFrame with np.Nan values.
 
-    This function only works for models deployed within the current project.
+    Outlier strictness is controlled by multiples of the IQR from each quantile.
     """
 
-    project_id = os.environ["CDSW_PROJECT_ID"]
+    X = pd.DataFrame(X).copy()
 
-    # gather model details
-    models = client.list_models(project_id=project_id, async_req=True).get().to_dict()
-    model_info = [model for model in models["models"] if model["name"] == model_name][0]
+    for col in cols:
 
-    model_id = model_info["id"]
-    model_crn = model_info["crn"]
-    model_access_key = model_info["access_key"]
+        x = pd.Series(X.loc[:, col]).copy()
+        q1 = x.quantile(0.25)
+        q3 = x.quantile(0.75)
+        iqr = q3 - q1
+        lower = q1 - (multiple * iqr)
+        upper = q3 + (multiple * iqr)
 
-    # gather latest build details
-    builds = (
-        client.list_model_builds(
-            project_id=project_id, model_id=model_id, async_req=True
-        )
-        .get()
-        .to_dict()
-    )
-    build_info = builds["model_builds"][-1]  # most recent build
+        X.loc[~X.loc[:, col].between(lower, upper, inclusive=True), col] = np.nan
 
-    build_id = build_info["id"]
+    return X[~X.isna().any(axis=1)]
 
-    # gather latest deployment details
-    deployments = (
-        client.list_model_deployments(
-            project_id=project_id, model_id=model_id, build_id=build_id, async_req=True
-        )
-        .get()
-        .to_dict()
-    )
-    deployment_info = deployments["model_deployments"][-1]  # most recent deployment
 
-    model_deployment_crn = deployment_info["crn"]
+def scale_prices(df):
+    """
+    Scale prices from being denominated in dollars to hundreds of thousands of dollars.
+    """
+    copy = df.copy(deep=True)
+    for col in ("ground_truth", "predicted_result"):
+        copy[col] = copy[col] / 100_000
 
-    return {
-        "model_name": model_name,
-        "model_id": model_id,
-        "model_crn": model_crn,
-        "model_access_key": model_access_key,
-        "latest_build_id": build_id,
-        "latest_deployment_crn": model_deployment_crn,
-    }
+    return copy
+
+
+def find_latest_report(report_dir):
+    """
+    Use date prefixed report titles located in a provided report_dir to identify the
+    latest report and return the filename.
+
+    Filename date prefixes should be in the format: "%Y-%m-%d"
+
+    """
+    reports = os.listdir(report_dir)
+    date_map = {report.split("_")[0]: i for i, report in enjumerate(reports) if report.split('.')[-1]=='html'}
+    latest_report = max(date_map.keys(), key=lambda d: datetime.strptime(d, "%Y-%m-%d"))
+
+    return reports[date_map[latest_report]]
+
+
+
+
+
+
+
+
+
+
