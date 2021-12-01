@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from utils.utils import random_day_offset, outlier_removal
+from code.utils import random_day_offset, outlier_removal
 
 # Load raw data
 df = pd.read_csv("data/raw/kc_house_data.csv")

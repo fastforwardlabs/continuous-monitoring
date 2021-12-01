@@ -7,15 +7,6 @@ import threading
 import numpy as np
 
 
-def cast_date_as_str_for_json(df):
-    """Given a dataframe, return the same dataframe with non-numeric columns cast as string"""
-
-    for column, dt in zip(df.columns, df.dtypes):
-        if dt.type not in [np.int64, np.float64]:
-            df.loc[:, column] = df.loc[:, column].astype(str)
-    return df
-
-
 class ThreadedModelRequest:
     """
     Utilize multi-threading to achieve concurrency and speed up I/O bottleneck associated

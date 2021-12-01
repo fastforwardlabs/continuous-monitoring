@@ -9,9 +9,9 @@ from pandas.tseries.offsets import DateOffset
 from evidently.dashboard import Dashboard
 from evidently.tabs import DataDriftTab, NumTargetDriftTab, RegressionPerformanceTab
 
-from utils.utils import scale_prices
-from utils.api_utils import ApiUtility
-from utils.inference_utils import ThreadedModelRequest
+from code.utils import scale_prices
+from code.api import ApiUtility
+from code.inference import ThreadedModelRequest
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

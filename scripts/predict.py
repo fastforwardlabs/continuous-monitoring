@@ -9,8 +9,6 @@ import cdsw
 import pickle
 import pandas as pd
 
-from utils.utils import get_active_feature_names
-
 with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
