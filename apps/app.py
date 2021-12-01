@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 
-from utils.utils import find_latest_report
+from src.utils import find_latest_report
 
 app = Flask(__name__, static_folder="apps/reports", static_url_path="")
 

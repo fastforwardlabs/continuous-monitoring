@@ -10,7 +10,7 @@
 import os
 import pandas as pd
 
-from code.simulation import Simulation
+from src.simulation import Simulation
 
 train_path = "../data/working/train_df.pkl"
 prod_path = "../data/working/prod_df.pkl"
