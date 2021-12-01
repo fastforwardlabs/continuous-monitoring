@@ -1,5 +1,5 @@
 name: Continuous Model Monitoring
-description: >- 
+description: >-
   Demonstration of how to perform continuous model monitoring on CML 
   using Model Metrics and Evidently.ai dashboards
 author: Cloudera Inc.
@@ -25,11 +25,6 @@ engine_images:
 
 feature_dependencies:
   - model_metrics
-
-runtimes:
-  - editor: Workbench
-    kernel: Python 3.6
-    edition: Standard
 
 tasks:
   - type: run_session
@@ -72,29 +67,32 @@ tasks:
     target_function_name: predict
     kernel: python3
     examples:
-      - request: {"id": 1962200037,
-                  "price": 626000,
-                  "bedrooms": 3,
-                  "bathrooms": 2.25,
-                  "sqft_living": 1750,
-                  "sqft_lot": 1572,
-                  "floors": 2.5,
-                  "waterfront": 0,
-                  "view": 0,
-                  "condition": 3,
-                  "grade": 9,
-                  "sqft_above": 1470,
-                  "sqft_basement": 280,
-                  "yr_built": 2005,
-                  "yr_renovated": 0,
-                  "zipcode": 98102,
-                  "lat": 47.6498,
-                  "long": -122.321,
-                  "sqft_living15": 2410,
-                  "sqft_lot15": 3050,
-                  "date_sold": "2014-05-02",
-                  "date_listed": "2014-03-04"}
-  
+      - request:
+          {
+            "id": 1962200037,
+            "price": 626000,
+            "bedrooms": 3,
+            "bathrooms": 2.25,
+            "sqft_living": 1750,
+            "sqft_lot": 1572,
+            "floors": 2.5,
+            "waterfront": 0,
+            "view": 0,
+            "condition": 3,
+            "grade": 9,
+            "sqft_above": 1470,
+            "sqft_basement": 280,
+            "yr_built": 2005,
+            "yr_renovated": 0,
+            "zipcode": 98102,
+            "lat": 47.6498,
+            "long": -122.321,
+            "sqft_living15": 2410,
+            "sqft_lot15": 3050,
+            "date_sold": "2014-05-02",
+            "date_listed": "2014-03-04",
+          }
+
   - type: deploy_model
     name: Price Regressor
     entity_label: pr_model
