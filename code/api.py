@@ -11,7 +11,9 @@ logger.setLevel(logging.INFO)
 
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-file_handler = logging.FileHandler("../logs/simulation.log")
+log_file = "../logs/simulation.log"
+os.makedirs(os.path.dirname(log_file), exist_ok=True)
+file_handler = logging.FileHandler(log_file)
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 
