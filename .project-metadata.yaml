@@ -50,7 +50,7 @@ tasks:
 
   - type: create_model
     name: Price Regressor
-    entity-label: pr_model
+    entity_label: pr_model
     description: Predict housing prices with ridge regression
     access_key_environment_variable: SHTM_ACCESS_KEY
     default_resources:
