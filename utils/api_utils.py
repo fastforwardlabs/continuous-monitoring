@@ -18,6 +18,7 @@ file_handler.setFormatter(formatter)
 if not logger.handlers:
     logger.addHandler(file_handler)
 
+
 class ApiUtility:
     def __init__(self):
         self.client = cmlapi.default_client()
@@ -121,7 +122,9 @@ class ApiUtility:
             "name": application_name,
             "description": "An Evidently.ai dashboard for monitoring data drift, target drift, and regression performance.",
             "project_id": os.environ["CDSW_PROJECT_ID"],
-            "subdomain": "".join([random.choice(string.ascii_lowercase) for _ in range(6)]),
+            "subdomain": "".join(
+                [random.choice(string.ascii_lowercase) for _ in range(6)]
+            ),
             "script": "apps/app.py",
             "cpu": 1,
             "memory": 2,
@@ -139,7 +142,7 @@ class ApiUtility:
         self.client.create_application(
             project_id=os.environ["CDSW_PROJECT_ID"], body=application_request
         )
-        logger.info(f'Created and deployed new application: {application_name}')
+        logger.info(f"Created and deployed new application: {application_name}")
 
     def restart_running_application(self, application_name):
         """
@@ -157,8 +160,5 @@ class ApiUtility:
         self.client.restart_application(
             project_id=os.environ["CDSW_PROJECT_ID"], application_id=app["id"]
         )
-        
-        logger.info(f'Restarted existing application: {application_name}')
 
-
-
+        logger.info(f"Restarted existing application: {application_name}")

@@ -6,6 +6,7 @@ import concurrent
 import threading
 import numpy as np
 
+
 def cast_date_as_str_for_json(df):
     """Given a dataframe, return the same dataframe with non-numeric columns cast as string"""
 

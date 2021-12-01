@@ -1,8 +1,6 @@
 import os
-import sys
 import cdsw
 import logging
-import cmlapi
 import logging
 import numpy as np
 import pandas as pd
@@ -33,7 +31,9 @@ class Simulation:
 
     def __init__(self, model_name):
         self.api = ApiUtility()
-        self.latest_deployment_details = self.api.get_latest_deployment_details(model_name=model_name)
+        self.latest_deployment_details = self.api.get_latest_deployment_details(
+            model_name=model_name
+        )
         self.tmr = ThreadedModelRequest(self.latest_deployment_details)
         self.master_id_uuid_mapping = {}
 
@@ -52,19 +52,27 @@ class Simulation:
             train_df, is_train=True
         )
         self.add_delayed_metrics(*formatted_metadata)
-        
-        train_metrics_df = self.query_model_metrics(**{k: train_inference_metadata[k] for k in train_inference_metadata if k != "id_uuid_mapping"})        
+
+        train_metrics_df = self.query_model_metrics(
+            **{
+                k: train_inference_metadata[k]
+                for k in train_inference_metadata
+                if k != "id_uuid_mapping"
+            }
+        )
 
         logger.info("------- Finished Section: Train Data -------")
 
         # ----------------------- Production Data -----------------------
-        
+
         for i, date_range in enumerate(self.date_ranges):
-            
-            formatted_date_range = " <--> ".join([ts.strftime("%Y-%m-%d") for ts in date_range])
+
+            formatted_date_range = " <--> ".join(
+                [ts.strftime("%Y-%m-%d") for ts in date_range]
+            )
 
             logger.info(
-                f'------- Starting Section {i+1}/{len(self.date_ranges)}: Prod Data ({formatted_date_range})-------'
+                f"------- Starting Section {i+1}/{len(self.date_ranges)}: Prod Data ({formatted_date_range})-------"
             )
 
             # Query prod_df for newly *listed* records from this batch and make inference
@@ -85,20 +93,26 @@ class Simulation:
             # Query metric store and build Evidently report
             # Note: because we cant query by UUID, first query all records, then filter to new_sold by uuid
             metrics_df = self.query_model_metrics()
-            new_sold_metrics_df = metrics_df[metrics_df.predictionUuid.isin(formatted_metadata[0])]
-            
-            self.build_evidently_report(reference_df=train_metrics_df, current_df=new_sold_metrics_df, current_date_range=date_range)
+            new_sold_metrics_df = metrics_df[
+                metrics_df.predictionUuid.isin(formatted_metadata[0])
+            ]
+
+            self.build_evidently_report(
+                reference_df=train_metrics_df,
+                current_df=new_sold_metrics_df,
+                current_date_range=date_range,
+            )
 
             # Create/Refresh Monitoring Dashboard application
-            app_name = 'Price Regressor Monitoring Dashboard'
-            
+            app_name = "Price Regressor Monitoring Dashboard"
+
             if i == 0:
                 self.api.deploy_monitoring_application(application_name=app_name)
             else:
                 self.api.restart_running_application(application_name=app_name)
 
             logger.info(
-                f'------- Finished Section {i+1}/{len(self.date_ranges)}: Prod Data ({formatted_date_range})-------'
+                f"------- Finished Section {i+1}/{len(self.date_ranges)}: Prod Data ({formatted_date_range})-------"
             )
 
     def make_inference(self, df):
@@ -252,10 +266,12 @@ class Simulation:
         additional arguments to indicate start/end timestamp.
 
         """
-        
+
         ipt = {}
-        ipt['model_deployment_crn'] = self.latest_deployment_details["latest_deployment_crn"]
-        
+        ipt["model_deployment_crn"] = self.latest_deployment_details[
+            "latest_deployment_crn"
+        ]
+
         if kwargs:
             ipt.update(kwargs)
 
@@ -291,24 +307,31 @@ class Simulation:
 
     @staticmethod
     def build_evidently_report(reference_df, current_df, current_date_range):
-        '''
-        Constructs a set of Evidently.ai monitoring reports (Data Drift, Numerical 
-        Target Drift, and Regression Performance) provided a reference and current 
+        """
+        Constructs a set of Evidently.ai monitoring reports (Data Drift, Numerical
+        Target Drift, and Regression Performance) provided a reference and current
         dataframe. Save the HTML report to disk for use as an Application.
-        
+
         Reports are named by the end date of the provided date range.
-        
+
         Args:
             reference_df (pd.Dataframe)
             current_df (pd.Dataframe)
             current_date_range (tuple)
 
-        '''
+        """
 
         TARGET = "ground_truth"
         PREDICTION = "predicted_result"
         NUM_FEATURES = ["sqft_living", "sqft_lot", "sqft_above"]
-        CAT_FEATURES = ["waterfront", "zipcode", "condition", "view", "bedrooms", "bathrooms"]
+        CAT_FEATURES = [
+            "waterfront",
+            "zipcode",
+            "condition",
+            "view",
+            "bedrooms",
+            "bathrooms",
+        ]
 
         column_map = {
             "target": TARGET,
@@ -318,7 +341,9 @@ class Simulation:
             "datetime": None,
         }
 
-        dashboard = Dashboard(tabs=[DataDriftTab, NumTargetDriftTab, RegressionPerformanceTab])
+        dashboard = Dashboard(
+            tabs=[DataDriftTab, NumTargetDriftTab, RegressionPerformanceTab]
+        )
 
         dashboard.calculate(
             reference_data=scale_prices(reference_df)
@@ -332,10 +357,13 @@ class Simulation:
             .round(2),
             column_mapping=column_map,
         )
-        
-        report_dir = '../apps/reports/'
-        report_path = os.path.join(report_dir, f'{current_date_range[1].strftime("%Y-%m-%d")}_price_regressor.html')
-        
+
+        report_dir = "../apps/reports/"
+        report_path = os.path.join(
+            report_dir,
+            f'{current_date_range[1].strftime("%Y-%m-%d")}_price_regressor.html',
+        )
+
         os.makedirs(report_dir, exist_ok=True)
         dashboard.save(report_path)
-        logger.info(f'Generated new Evidently report: {report_path}')
+        logger.info(f"Generated new Evidently report: {report_path}")

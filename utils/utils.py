@@ -1,10 +1,9 @@
 import os
-import sklearn
 import numpy as np
 import pandas as pd
 from datetime import datetime
 from pandas.tseries.offsets import DateOffset
-from sklearn.preprocessing import FunctionTransformer
+
 
 def random_day_offset(ts: pd._libs.tslibs.timestamps.Timestamp, max_days=60):
     """
@@ -25,8 +24,12 @@ def get_active_feature_names(
     ]
 
     return np.concatenate(
-        [column_transformer.named_transformers_[step].feature_names_in_ for step in active_steps]
+        [
+            column_transformer.named_transformers_[step].feature_names_in_
+            for step in active_steps
+        ]
     ).tolist()
+
 
 def outlier_removal(X, multiple, cols):
     """
@@ -71,17 +74,11 @@ def find_latest_report(report_dir):
 
     """
     reports = os.listdir(report_dir)
-    date_map = {report.split("_")[0]: i for i, report in enjumerate(reports) if report.split('.')[-1]=='html'}
+    date_map = {
+        report.split("_")[0]: i
+        for i, report in enumerate(reports)
+        if report.split(".")[-1] == "html"
+    }
     latest_report = max(date_map.keys(), key=lambda d: datetime.strptime(d, "%Y-%m-%d"))
 
     return reports[date_map[latest_report]]
-
-
-
-
-
-
-
-
-
-

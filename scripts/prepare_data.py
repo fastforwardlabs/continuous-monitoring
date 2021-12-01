@@ -34,7 +34,7 @@ prod_df = df[
 ].sort_values("date_sold")
 
 # Save off these dataframes
-working_dir = 'data/working'
+working_dir = "data/working"
 os.makedirs(working_dir, exist_ok=True)
 dfs = [("train", train_df), ("prod", prod_df)]
 for name, dataframe in dfs:

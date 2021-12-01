@@ -3,11 +3,11 @@ import pickle
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import Lasso, Ridge, ElasticNet
+from sklearn.linear_model import Ridge
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
-from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.model_selection import GridSearchCV
 
 train_path = "data/working/train_df.pkl"
 train_df = pd.read_pickle(train_path)
@@ -17,7 +17,7 @@ y_train = train_df.price
 
 # define the intended features and type
 num_cols = ["sqft_living", "sqft_lot", "sqft_above"]
-cat_cols = ["bedrooms", "bathrooms","waterfront", "zipcode", "condition", "view"]
+cat_cols = ["bedrooms", "bathrooms", "waterfront", "zipcode", "condition", "view"]
 
 # define our numerical and categorical pipelines
 num_pipe = Pipeline(
@@ -60,7 +60,7 @@ gscv = GridSearchCV(
 )
 
 gscv.fit(X_train, y_train)
-print(f'Best MAE: {gscv.best_score_}')
+print(f"Best MAE: {gscv.best_score_}")
 
 # save model
 with open("model.pkl", "wb") as f:
