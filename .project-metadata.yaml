@@ -15,6 +15,9 @@ environment_variables:
       to facilitate project development.
     required: True
 
+feature_dependencies:
+  - model_metrics
+
 runtimes:
   - editor: Workbench
   - kernel: Python 3.6
@@ -22,9 +25,6 @@ runtimes:
 
 engine_images:
   - image_name: engine
-
-feature_dependencies:
-  - model_metrics
 
 tasks:
   - type: run_session
