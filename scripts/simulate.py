@@ -19,8 +19,8 @@ train_df = pd.read_pickle(train_path)
 prod_df = pd.read_pickle(prod_path)
 
 if os.environ["DEV_MODE"] == "True":
-    train_df = train_df.sample(frac=0.9, random_state=42)
-    prod_df = prod_df.sample(frac=0.9, random_state=42)
+    train_df = train_df.sample(frac=0.8, random_state=42)
+    prod_df = prod_df.sample(frac=0.8, random_state=42)
 
 sim = Simulation(model_name="Price Regressor")
 sim.run_simulation(train_df, prod_df)
