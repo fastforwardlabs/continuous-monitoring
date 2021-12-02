@@ -69,7 +69,7 @@ class Simulation:
     def run_simulation(self, train_df, prod_df):
         """Operates the main logic to simulate a production scenario."""
 
-        self.set_simulation_clock(prod_df, months_in_batch=2)
+        self.set_simulation_clock(prod_df, months_in_batch=1)
 
         # sample data
         train_df, prod_df = [
