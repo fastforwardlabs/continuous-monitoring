@@ -22,6 +22,16 @@ if not logger.handlers:
 
 
 class ApiUtility:
+    """A utility class for working with CML API_v2
+
+    This class contains methods that wrap API_v2 to achieve specific
+    needs that facilitate the simulation.
+
+    Attributes:
+        client (cmlapi.api.cml_service_api.CMLServiceApi)
+
+    """
+
     def __init__(self):
         self.client = cmlapi.default_client()
 

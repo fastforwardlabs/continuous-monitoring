@@ -29,20 +29,52 @@ if not logger.handlers:
 
 
 class Simulation:
-    """ """
+    """The main simulation routine to mimic a "production" monitoring use case.
 
-    def __init__(self, model_name):
+    This simulation assumes a Model has already been deployed, and accepts that model
+    name as input. The .run_simulation() method operates the main logic of this class.
+    Namely, it:
+
+        1. Scores all training data against the deployed model so we can query metrics
+            from the Model Metrics database for evaluation
+        2. Initializes a simulation clock, which is just a list of date ranges from the
+            prod_df to iterate over. These batches mimic the cadence upon which new data
+            "arrives" in a production setting.
+        3. For simulation clock date_range, we:
+            - Query the prod_df for newly *listed* recrods and score them using deployed model
+            - Query the prod_df for newly *sold* records and add ground truths to metric store
+            - Query the metric store for thoes newly *sold* records and generate new Evidently report
+            - Redeploy the hosted Application to surface the new monitoring report
+
+    Attributes:
+        api (src.api.ApiUtility): utility class for help with CML APIv2 calls
+        latest_deployment_details (dict): config info about deployed model
+        tmr (src.inference.ThreadedModelRequest): utility for making concurrent model API calls
+        master_id_uuid_mapping (dict): lookup between input data ID's and predictionUuids
+        dev_mode (bool): flag for running simulation with 5% of total data
+        sample_size (float): fraction of data to run simulation with
+
+    """
+
+    def __init__(self, model_name: str, dev_mode: bool = False):
         self.api = ApiUtility()
         self.latest_deployment_details = self.api.get_latest_deployment_details(
             model_name=model_name
         )
         self.tmr = ThreadedModelRequest(self.latest_deployment_details)
         self.master_id_uuid_mapping = {}
+        self.dev_mode = dev_mode
+        self.sample_size = 0.05 if self.dev_mode is True else 0.8
 
     def run_simulation(self, train_df, prod_df):
-        """ """
+        """Operates the main logic to simulate a production scenario."""
 
         self.set_simulation_clock(prod_df, months_in_batch=2)
+
+        # sample data
+        train_df, prod_df = [
+            self.sample_dataframe(df, self.sample_size) for df in (train_df, prod_df)
+        ]
 
         # ------------------------ Training Data ------------------------
         # make inference on training data so records are query-able, add
@@ -278,6 +310,21 @@ class Simulation:
             ipt.update(kwargs)
 
         return self.format_model_metrics_query(cdsw.read_metrics(**ipt))
+
+    @staticmethod
+    def sample_dataframe(df, fraction):
+        """
+        Return a sample of the provided dataframe.
+
+        Args:
+            df (pd.DataFrame)
+            fraction (float): sample size of dataframe desired
+
+        Returns:
+            pd.DataFrame
+
+        """
+        return df.sample(frac=fraction, random_state=42)
 
     @staticmethod
     def cast_date_as_str_for_json(df):

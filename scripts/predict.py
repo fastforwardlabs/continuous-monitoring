@@ -9,6 +9,8 @@ import cdsw
 import pickle
 import pandas as pd
 
+from src.utils import col_order
+
 with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
@@ -20,9 +22,6 @@ with open("model.pkl", "rb") as f:
 #   "uuid": "612a0f17-33ad-4c41-8944-df15183ac5bd",
 #   "prediction": "result"
 # }
-
-# The UUID can be used to query the stored metrics for this
-# prediction later.
 
 
 @cdsw.model_metrics

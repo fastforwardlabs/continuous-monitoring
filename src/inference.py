@@ -4,15 +4,19 @@ import json
 import requests
 import concurrent
 import threading
-import numpy as np
 
 
 class ThreadedModelRequest:
-    """
+    """A utility for making concurrent model API calls
+
     Utilize multi-threading to achieve concurrency and speed up I/O bottleneck associated
     with making a large number of synchronous API calls to the model endpoint.
 
-    Note - this function can also be implemented with cdsw.call_model()
+    Attributes:
+        n_threads (int)
+        deployment_details (dict): config info about deployed model
+        model_service_url (str): deployed models API endpoint URL
+        thread_local (_thread._local): A class that represents thread-local data
 
     """
 
@@ -28,6 +32,14 @@ class ThreadedModelRequest:
         return self.thread_local.session
 
     def call_model(self, record):
+        """'
+        Use a self created payload object and the requests library to call the
+        deployed model.
+
+        Configuring the requests session manually allows for multithreading to
+        work.
+
+        """
 
         headers = {
             "Content-Type": "application/json",
@@ -49,7 +61,6 @@ class ThreadedModelRequest:
     def call_model_cdsw(self, record):
         """
         Not Implemented - currently performs 42% slower than call_model.
-        Threading cant be properly implemented
         """
 
         response = cdsw.call_model(
@@ -60,6 +71,11 @@ class ThreadedModelRequest:
         return record["id"], response["response"]["uuid"]
 
     def threaded_call(self, records):
+        """
+        Utilize the call_model() method to make API calls to the deployed model
+        for a batch of input records using multithreading for efficiency.
+
+        """
 
         start_timestamp_ms = int(round(time.time() * 1000))
 
