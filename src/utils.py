@@ -4,6 +4,31 @@ import pandas as pd
 from datetime import datetime
 from pandas.tseries.offsets import DateOffset
 
+col_order = [
+    "id",
+    "price",
+    "bedrooms",
+    "bathrooms",
+    "sqft_living",
+    "sqft_lot",
+    "floors",
+    "waterfront",
+    "view",
+    "condition",
+    "grade",
+    "sqft_above",
+    "sqft_basement",
+    "yr_built",
+    "yr_renovated",
+    "zipcode",
+    "lat",
+    "long",
+    "sqft_living15",
+    "sqft_lot15",
+    "date_sold",
+    "date_listed",
+]
+
 
 def random_day_offset(ts: pd._libs.tslibs.timestamps.Timestamp, max_days=60):
     """
