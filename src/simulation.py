@@ -360,7 +360,7 @@ class Simulation:
             column_mapping=column_map,
         )
 
-        report_dir = "../apps/reports/"
+        report_dir = "apps/reports/"
         report_path = os.path.join(
             report_dir,
             f'{current_date_range[1].strftime("%Y-%m-%d")}_price_regressor.html',
