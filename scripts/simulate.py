@@ -18,7 +18,7 @@ prod_path = "data/working/prod_df.pkl"
 train_df = pd.read_pickle(train_path)
 prod_df = pd.read_pickle(prod_path)
 
-if os.environ["DEV_MODE"] == True:
+if os.environ["DEV_MODE"] == "True":
     train_df = train_df.sample(frac=0.05, random_state=42)
     prod_df = prod_df.sample(frac=0.05, random_state=42)
 
