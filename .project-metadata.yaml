@@ -101,5 +101,5 @@ tasks:
     name: Run Simulation
     script: scripts/simulate.py
     kernel: python3
-    memory: 2
-    cpu: 1
+    memory: 4
+    cpu: 2
