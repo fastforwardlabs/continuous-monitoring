@@ -182,7 +182,7 @@ class Simulation:
 
         return metadata
 
-    def set_simulation_clock(self, prod_df, months_in_batch=2):
+    def set_simulation_clock(self, prod_df, months_in_batch=1):
         """
         Determine the number of "batches" of dates to simulate over the duration of the production dataset and
         set date ranges for each batch as class attribute.

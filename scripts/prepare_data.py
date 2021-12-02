@@ -23,14 +23,16 @@ df = outlier_removal(X=df, multiple=3, cols=["price"])
 
 # Split out first 6 months of data for training, remaining for simulating a "production" scenario
 min_sold_date = df.date_sold.min()
-max_sold_date = df.date_sold.max()
+max_sold_date = (
+    df.date_sold.max().to_period("M").to_timestamp()  # drop the partial last month
+)
 
 train_df = df[
     df.date_sold.between(min_sold_date, "2014-10-31", inclusive="both")
 ].sort_values("date_sold")
 
 prod_df = df[
-    df.date_sold.between("2014-10-31", max_sold_date, inclusive="right")
+    df.date_sold.between("2014-10-31", max_sold_date, inclusive=False)
 ].sort_values("date_sold")
 
 # Save off these dataframes
