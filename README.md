@@ -1,6 +1,6 @@
 # Continuous Model Monitoring
 
-A demonstration of how to perform continuous model monitoring on Cloudera Machine Learning (CML) using the Model Metrics feature and [Evidently.ai's](https://evidentlyai.com/) open-source monitoring dashboards.
+A demonstration of how to perform continuous model monitoring on Cloudera Machine Learning (CML) using the [Model Metrics](https://docs.cloudera.com/machine-learning/cloud/model-metrics/topics/ml-enabling-model-metrics.html) feature and [Evidently.ai's](https://evidentlyai.com/) open-source monitoring dashboards.
 
 ![](data/images/evidently_ai_logo_fi.png)
 
@@ -18,27 +18,27 @@ To combat concept drift in production systems, its important to have robust moni
 .
 ├── LICENSE
 ├── README.md
-├── .project-metadata.yaml				# declarative specification for AMP logic
+├── .project-metadata.yaml              # declarative specification for AMP logic
 ├── apps
-│   ├── reports							# folder to collect monitoring reports
-│   └── app.py							# Flask app to serve monitoring reports
-├── cdsw-build.sh					    # build script for model endpoint
-├── data								# directory to hold raw and working data artifacts
-├── notebooks							# folder that holds development notebooks
+│   ├── reports                         # folder to collect monitoring reports
+│   └── app.py                          # Flask app to serve monitoring reports
+├── cdsw-build.sh                       # build script for model endpoint
+├── data                                # directory to hold raw and working data artifacts
+├── notebooks                           # folder that holds development notebooks
 ├── requirements.txt
 ├── scripts
-│   ├── install_dependencies.py		    # commands to install python package dependencies
-│   ├── predict.py					    # inference script that utilizes cdsw.model_metrics
-│   ├── prepare_data.py					# splits raw data into training and production sets
-│   ├── simulate.py						# script that runs simulated production logic
-│   └── train.py						# build and train an sklearn pipelne for regression
+│   ├── install_dependencies.py         # commands to install python package dependencies
+│   ├── predict.py                      # inference script that utilizes cdsw.model_metrics
+│   ├── prepare_data.py                 # splits raw data into training and production sets
+│   ├── simulate.py                     # script that runs simulated production logic
+│   └── train.py                        # build and train an sklearn pipelne for regression
 ├── setup.py
 └── src
     ├── __init__.py
-    ├── api.py							# utility class for working with CML APIv2
-    ├── inference.py					# utility class for concurrent model requests
-    ├── simulation.py					# utility class for simulation logic
-    └── utils.py						# various utility functions
+    ├── api.py                          # utility class for working with CML APIv2
+    ├── inference.py                    # utility class for concurrent model requests
+    ├── simulation.py                   # utility class for simulation logic
+    └── utils.py                        # various utility functions
 ```
 
 By launching this AMP on CML, the following steps will be taken to recreate the project in your workspace:
