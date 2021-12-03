@@ -24,7 +24,6 @@ To combat concept drift in production systems, its important to have robust moni
 │   └── app.py                          # Flask app to serve monitoring reports
 ├── cdsw-build.sh                       # build script for model endpoint
 ├── data                                # directory to hold raw and working data artifacts
-├── notebooks                           # folder that holds development notebooks
 ├── requirements.txt
 ├── scripts
 │   ├── install_dependencies.py         # commands to install python package dependencies
