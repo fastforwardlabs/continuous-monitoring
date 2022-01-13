@@ -178,6 +178,7 @@ class ApiUtility:
                 [random.choice(string.ascii_lowercase) for _ in range(6)]
             ),
             "script": "apps/app.py",
+            "kernel": "python3",
             "cpu": 1,
             "memory": 2,
         }
@@ -186,8 +187,6 @@ class ApiUtility:
         runtime = self.get_latest_standard_runtime()
         if runtime:
             ipt["runtime_identifier"] = runtime
-        else:
-            ipt["kernel"] = "python3"
 
         application_request = cmlapi.CreateApplicationRequest(**ipt)
 
