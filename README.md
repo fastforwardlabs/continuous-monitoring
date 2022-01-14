@@ -45,14 +45,19 @@ By launching this AMP on CML, the following steps will be taken to recreate the 
 1. A Python session is run to split the raw data into training and production sets, then saved locally
 2. A [sci-kit learn pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) with preprocessing and ridge regression steps is constructed and used in a grid search - cross validation to select the best estimator among a set of hyperparameters. This pipeline is save to the project.
 3. The pipeline is deployed as a [hosted REST API](https://docs.cloudera.com/machine-learning/cloud/models/topics/ml-models.html) with CML's [Model Metrics feature](https://docs.cloudera.com/machine-learning/cloud/model-metrics/topics/ml-enabling-model-metrics.html) enabled to track each prediction with a managed Postgres database for later analysis.
-4. A simulation is run - month by month - on the production dataset to:
-   - Lookup newly _listed_ properties and predict their sale prices using deployed model
-   - Lookup newly _sold_ properties and track their ground truth values by joining to original prediction record in the metric store
-   - Deploy a refreshed, Evidently monitoring dashboard via [CML Application](https://docs.cloudera.com/machine-learning/cloud/applications/topics/ml-applications-c.html) to visualize data drift, target drift, and regression performance on the new batch of records
+4. A [simulation](src/simulation.py) is run in that iterates over the production dataset in monthly batches. For each new month of production data (of which there are six total), the simulation will:
+   - Lookup newly _listed_ properties from the batch and predict their sale prices using the deployed model
+   - Lookup newly _sold_ properties from the batch and track their ground truth values by joining to original prediction record in the metric store
+   - Calculate drift metrics and deploy a refreshed, Evidently monitoring dashboard via a [CML Application](https://docs.cloudera.com/machine-learning/cloud/applications/topics/ml-applications-c.html) 
+
+Upon succesful recreation of the project (which may take ~45 minutes), the simulation will have produced six monitoring reports - one for each month of "production" records - and saved those reports to the `apps/reports/` directory. Each report consists of three Evidently report tabs (data drift, target drift, and regression performance) that are combined into a single application that you can access directly via the Applications pane in CML to determine if and where drift is occuring within the new batch of data. We encourage users to peruse the [simulation logic and documentation](src/simulation.py) directly for a detailed look at how new records are scored, logged, and queried to generate monitoring reports.
+
+> NOTE: Since the simulation is intended to mimic a production scenario, the deployed application is refreshed *in-place* with results from each new batch of data. Therefore, only the most recent month's drift report is displayed at any given time. You can inspect the deployed application while the simulation is running see month-to-month changes in the drift reports.
 
 ## Launching the Project on CML
 
-There are two ways to launch this project on CML:
+This AMP was developed against Python 3.6. There are two ways to launch the project on CML:
 
 1. **From Prototype Catalog** - Navigate to the AMPs tab on a CML workspace, select the "Continuous Model Monitoring" tile, click "Launch as Project", click "Configure Project"
 2. **As an AMP** - In a CML workspace, click "New Project", add a Project Name, select "ML Prototype" as the Initial Setup option, copy in this repo URL, click "Create Project", click "Configure Project"
+
