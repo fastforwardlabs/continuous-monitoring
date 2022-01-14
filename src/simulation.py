@@ -44,6 +44,7 @@ import logging
 import numpy as np
 import pandas as pd
 from typing import Dict
+from tqdm import tqdm
 from pandas.tseries.offsets import DateOffset
 from evidently.dashboard import Dashboard
 from evidently.tabs import DataDriftTab, NumTargetDriftTab, RegressionPerformanceTab
@@ -138,7 +139,9 @@ class Simulation:
 
         # ----------------------- Production Data -----------------------
 
-        for i, date_range in enumerate(self.date_ranges):
+        for i, date_range in tqdm(
+            enumerate(self.date_ranges), total=len(self.date_ranges) + 1
+        ):
 
             formatted_date_range = " <--> ".join(
                 [ts.strftime("%Y-%m-%d") for ts in date_range]
