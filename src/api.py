@@ -187,6 +187,7 @@ class ApiUtility:
         runtime = self.get_latest_standard_runtime()
         if runtime:
             ipt["runtime_identifier"] = runtime
+            del ipt["kernel"]
 
         application_request = cmlapi.CreateApplicationRequest(**ipt)
 
