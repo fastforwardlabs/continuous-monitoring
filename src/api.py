@@ -184,9 +184,11 @@ class ApiUtility:
         }
 
         # configure runtime if available
-        runtime = self.get_latest_standard_runtime()
-        if runtime:
-            ipt["runtime_identifier"] = runtime
+        if (
+            self.client.get_project(os.environ["CDSW_PROJECT_ID"]).default_engine_type
+            != "legacy_engine"
+        ):
+            ipt["runtime_identifier"] = self.get_latest_standard_runtime()
             del ipt["kernel"]
 
         application_request = cmlapi.CreateApplicationRequest(**ipt)
