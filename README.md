@@ -59,5 +59,5 @@ Upon succesful recreation of the project (which may take ~20 minutes), the simul
 This AMP was developed against Python 3.6. There are two ways to launch the project on CML:
 
 1. **From Prototype Catalog** - Navigate to the AMPs tab on a CML workspace, select the "Continuous Model Monitoring" tile, click "Launch as Project", click "Configure Project"
-2. **As an AMP** - In a CML workspace, click "New Project", add a Project Name, select "ML Prototype" as the Initial Setup option, copy in this repo URL, click "Create Project", click "Configure Project"
+2. **As an AMP** - In a CML workspace, click "New Project", add a Project Name, select "AMPs" as the Initial Setup option, copy in this repo URL, click "Create Project", click "Configure Project"
 
