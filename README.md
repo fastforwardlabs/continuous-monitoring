@@ -42,10 +42,11 @@ To combat concept drift in production systems, its important to have robust moni
 
 By launching this AMP on CML, the following steps will be taken to recreate the project in your workspace:
 
-1. A Python session is run to split the raw data into training and production sets, then saved locally
-2. A [sci-kit learn pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) with preprocessing and ridge regression steps is constructed and used in a grid search - cross validation to select the best estimator among a set of hyperparameters. This pipeline is save to the project.
-3. The pipeline is deployed as a [hosted REST API](https://docs.cloudera.com/machine-learning/cloud/models/topics/ml-models.html) with CML's [Model Metrics feature](https://docs.cloudera.com/machine-learning/cloud/model-metrics/topics/ml-enabling-model-metrics.html) enabled to track each prediction with a managed Postgres database for later analysis.
-4. A [simulation](src/simulation.py) is run in that iterates over the production dataset in monthly batches. For each new month of production data (of which there are six total), the simulation will:
+1. A Python session is run to install all required project dependencies
+2. A Python session is run to split the raw data into training and production sets, then saved locally
+3. A [sci-kit learn pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) with preprocessing and ridge regression steps is constructed and used in a grid search - cross validation to select the best estimator among a set of hyperparameters. This pipeline is save to the project.
+4. The pipeline is deployed as a [hosted REST API](https://docs.cloudera.com/machine-learning/cloud/models/topics/ml-models.html) with CML's [Model Metrics feature](https://docs.cloudera.com/machine-learning/cloud/model-metrics/topics/ml-enabling-model-metrics.html) enabled to track each prediction with a managed Postgres database for later analysis.
+5. A [simulation](src/simulation.py) is run in that iterates over the production dataset in monthly batches. For each new month of production data (of which there are six total), the simulation will:
    - Lookup newly _listed_ properties from the batch and predict their sale prices using the deployed model
    - Lookup newly _sold_ properties from the batch and track their ground truth values by joining to original prediction record in the metric store
    - Calculate drift metrics and deploy a refreshed, Evidently monitoring dashboard via a [CML Application](https://docs.cloudera.com/machine-learning/cloud/applications/topics/ml-applications-c.html) 
