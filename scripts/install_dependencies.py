@@ -44,6 +44,10 @@ try:
     import cmlapi
 except ModuleNotFoundError:
     cluster = os.getenv("CDSW_API_URL")[:-1] + "2"
-    !pip3 install {cluster}/python.tar.gz
+    
+    with open('requirements.txt', 'r') as original:
+        reqs = original.read()
+    with open('requirements.txt', 'w') as modified:
+        modified.write(f"{cluster}\n" + reqs)
 
 !pip3 install -r requirements.txt 
