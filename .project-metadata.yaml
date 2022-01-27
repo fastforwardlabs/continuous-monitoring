@@ -45,8 +45,8 @@ tasks:
     name: Train Model
     script: scripts/train.py
     kernel: python3
-    memory: 2
-    cpu: 1
+    memory: 4
+    cpu: 2
 
   - type: create_model
     name: Price Regressor
